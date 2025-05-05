@@ -1,8 +1,6 @@
-*.pyc
-*~
-__pycache__/
-*.sqlite3
-*.db
-.env
-venv/
-.idea/
+echo .idea/>.gitignore
+echo __pycache__/>>.gitignore
+echo *.db>>.gitignore
+echo venv/>>.gitignore
+echo *.pyc>>.gitignore
+type .gitignore
