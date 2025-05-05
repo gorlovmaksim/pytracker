@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="mb-4">Add Habit</h2>
+            <form method="POST">
+                {{ form.hidden_tag() }}
+
+                <!-- Name Field -->
+                <div class="mb-3">
+                    {{ form.name.label(class="form-label") }}
+                    {{ form.name(
+                        class="form-control" +
+                        (" is-invalid" if form.name.errors else "")
+                    ) }}
+                    {% for error in form.name.errors %}
+                        <div class="invalid-feedback">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Periodicity Field -->
+                <div class="mb-3">
+                    {{ form.periodicity.label(class="form-label") }}
+                    {{ form.periodicity(
+                        class="form-select" +
+                        (" is-invalid" if form.periodicity.errors else "")
+                    ) }}
+                    {% for error in form.periodicity.errors %}
+                        <div class="invalid-feedback">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Target Days Field -->
+                <div class="mb-3">
+                    {{ form.target_days.label(class="form-label") }}
+                    {{ form.target_days(
+                        class="form-control" +
+                        (" is-invalid" if form.target_days.errors else "")
+                    ) }}
+                    {% for error in form.target_days.errors %}
+                        <div class="invalid-feedback">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">
+                    Add
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

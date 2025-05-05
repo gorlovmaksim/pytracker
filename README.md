@@ -1,2 +1,0 @@
-# pytracker
-Habit tracker.

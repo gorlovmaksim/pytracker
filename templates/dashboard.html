@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>My Habits</h1>
+        <a href="{{ url_for('habits.add_habit') }}" class="btn btn-primary">
+            <i class="bi bi-plus"></i> Add Habit
+        </a>
+    </div>
+
+    <div class="row">
+        {% for habit in habits %}
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <!-- Habit Header -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3>{{ habit.name }}</h3>
+                        <span class="badge bg-secondary">{{ habit.periodicity }}</span>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="progress mb-3" style="height: 20px;">
+                        <div class="progress-bar"
+                             style="width: {{ habit.completion_rate_value }}%">
+                            {{ habit.completion_rate_value }}%
+                        </div>
+                    </div>
+
+                    <!-- Stats Badges -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge bg-info">
+                            <i class="bi bi-fire"></i> Streak: {{ habit.current_streak_value }} days
+                        </span>
+                        <span class="badge bg-dark">
+                            Target: {{ habit.target_days }} days
+                        </span>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="btn-group w-100">
+                        <form action="{{ url_for('habits.mark_habit', habit_id=habit.id, completed='true') }}"
+                              method="POST"
+                              class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-success">
+                                <i class="bi bi-check"></i> Complete
+                            </button>
+                        </form>
+                        <form action="{{ url_for('habits.mark_habit', habit_id=habit.id, completed='false') }}"
+                              method="POST"
+                              class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                <i class="bi bi-x"></i> Skip
+                            </button>
+                        </form>
+                        <a href="{{ url_for('habits.habit_detail', habit_id=habit.id) }}"
+                           class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-graph-up"></i> Stats
+                        </a>
+                        <form action="{{ url_for('habits.delete_habit', habit_id=habit.id) }}"
+                              method="POST"
+                              class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <!-- Empty State -->
+        <div class="col-12">
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> You don't have any habits yet. Add your first one!
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

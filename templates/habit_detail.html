@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <!-- Habit Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>{{ habit.name }}</h1>
+        <div>
+            <span class="badge bg-secondary">{{ habit.periodicity }}</span>
+            <span class="badge bg-info ms-2">Day {{ current_day }} of {{ total_days }}</span>
+        </div>
+    </div>
+
+    <!-- Stats Card -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <!-- Current Streak -->
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <h4>Current Streak</h4>
+                    <div class="display-4">{{ habit.current_streak() }}</div>
+                    <div class="progress mt-2">
+                        <div class="progress-bar bg-success"
+                             style="width: {{ (habit.current_streak() / habit.target_days) * 100 }}%">
+                        </div>
+                    </div>
+                    <small>Target: {{ habit.target_days }} days</small>
+                </div>
+
+                <!-- Completion Rate -->
+                <div class="col-md-6">
+                    <h4>Overall Progress</h4>
+                    <div class="display-4">{{ completion_rate }}%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Chart -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h4 class="card-title">Completion Progress</h4>
+            <canvas id="progressChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+        <a href="{{ url_for('habits.dashboard') }}" class="btn btn-secondary me-md-2">
+            <i class="bi bi-arrow-left"></i> Back to List
+        </a>
+        <form action="{{ url_for('habits.mark_habit', habit_id=habit.id, completed='true') }}"
+              method="POST">
+            <button type="submit" class="btn btn-success">
+                <i class="bi bi-check"></i> Mark as Completed Today
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('progressChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ chart_labels|safe }},
+                datasets: [{
+                    label: 'Habit Completion',
+                    data: {{ chart_data|safe }},
+                    backgroundColor: function(context) {
+                        return context.raw === 1 ? '#4CAF50' : '#f8f9fa';
+                    },
+                    borderColor: '#4CAF50',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 1,
+                        ticks: {
+                            stepSize: 1,
+                            callback: function(value) {
+                                return value === 1 ? 'Done' : 'Missed';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.raw === 1 ? 'Completed' : 'Not completed';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
