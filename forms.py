@@ -1,18 +1,8 @@
 """Form definitions for user authentication and habit tracking."""
 
 from flask_wtf import FlaskForm
-from wtforms import (
-    StringField,
-    PasswordField,
-    SelectField,
-    IntegerField
-)
-from wtforms.validators import (
-    DataRequired,
-    Email,
-    Length,
-    EqualTo
-)
+from wtforms import StringField, PasswordField, SelectField, IntegerField
+from wtforms.validators import DataRequired, Email, Length, EqualTo
 
 
 class RegistrationForm(FlaskForm):
@@ -20,31 +10,19 @@ class RegistrationForm(FlaskForm):
 
     username = StringField(
         'Username',
-        validators=[
-            DataRequired(),
-            Length(min=4, max=20)
-        ]
+        validators=[DataRequired(), Length(min=4, max=20)]
     )
     email = StringField(
         'Email',
-        validators=[
-            DataRequired(),
-            Email()
-        ]
+        validators=[DataRequired(), Email()]
     )
     password = PasswordField(
         'Password',
-        validators=[
-            DataRequired(),
-            Length(min=6)
-        ]
+        validators=[DataRequired(), Length(min=6)]
     )
     confirm_password = PasswordField(
         'Confirm Password',
-        validators=[
-            DataRequired(),
-            EqualTo('password')
-        ]
+        validators=[DataRequired(), EqualTo('password')]
     )
 
 
@@ -53,10 +31,7 @@ class LoginForm(FlaskForm):
 
     email = StringField(
         'Email',
-        validators=[
-            DataRequired(),
-            Email()
-        ]
+        validators=[DataRequired(), Email()]
     )
     password = PasswordField(
         'Password',
@@ -65,7 +40,7 @@ class LoginForm(FlaskForm):
 
 
 class HabitForm(FlaskForm):
-    """Habit creation form."""
+    """Form for creating or editing a habit."""
 
     name = StringField(
         'Habit Name',
@@ -73,10 +48,7 @@ class HabitForm(FlaskForm):
     )
     periodicity = SelectField(
         'Periodicity',
-        choices=[
-            ('daily', 'Daily'),
-            ('weekly', 'Weekly')
-        ],
+        choices=[('daily', 'Daily'), ('weekly', 'Weekly')],
         validators=[DataRequired()]
     )
     target_days = IntegerField(

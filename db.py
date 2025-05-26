@@ -2,18 +2,15 @@
 
 from flask_sqlalchemy import SQLAlchemy
 
-
 # Initialize SQLAlchemy extension
 db = SQLAlchemy()
 
 
 def init_app(app):
-    """Initialize database with Flask application.
+    """Initialize the database with the Flask application.
 
     Args:
-        app: Flask application instance
-
-    Creates all database tables if they don't exist.
+        app (Flask): The Flask application instance.
     """
     db.init_app(app)
     with app.app_context():

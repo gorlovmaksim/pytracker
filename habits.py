@@ -1,37 +1,40 @@
-"""Habits blueprint for tracking and managing user habits."""
+"""Habit tracking blueprint and related functionality."""
 
-from flask import (
-    Blueprint,
-    render_template,
-    request,
-    jsonify,
-    redirect,
-    url_for,
-    flash,
-    abort
-)
+from flask import (Blueprint, render_template, redirect, url_for, flash,
+                   request, jsonify, abort)
 from flask_login import login_required, current_user
 from datetime import datetime, timedelta
 import json
-
-from models import Habit, Progress
 from db import db
+from models import Habit, Progress
 from forms import HabitForm
 
 
 habits_bp = Blueprint('habits', __name__)
 
 
+class HabitFactory:
+    """Factory for creating Habit objects."""
+
+    @staticmethod
+    def create(name, periodicity, user_id, target_days):
+        """Create a new Habit instance."""
+        return Habit(
+            name=name,
+            periodicity=periodicity,
+            user_id=user_id,
+            target_days=target_days
+        )
+
+
 @habits_bp.route('/')
 @login_required
 def dashboard():
-    """Display user's habit dashboard."""
+    """Display the user's habit dashboard."""
     habits = current_user.habits
     for habit in habits:
         habit.current_streak_value = habit.current_streak()
         habit.completion_rate_value = habit.completion_rate()
-        habit.days_completed = len([p for p in habit.progress if p.completed])
-        habit.days_remaining = max(0, habit.target_days - habit.days_completed)
     return render_template('dashboard.html', habits=habits)
 
 
@@ -41,11 +44,11 @@ def add_habit():
     """Add a new habit."""
     form = HabitForm()
     if form.validate_on_submit():
-        habit = Habit(
-            name=form.name.data,
-            periodicity=form.periodicity.data,
-            target_days=form.target_days.data,
-            user_id=current_user.id
+        habit = HabitFactory.create(
+            form.name.data,
+            form.periodicity.data,
+            current_user.id,
+            form.target_days.data
         )
         db.session.add(habit)
         db.session.commit()
@@ -57,33 +60,27 @@ def add_habit():
 @habits_bp.route('/<int:habit_id>')
 @login_required
 def habit_detail(habit_id):
-    """Display detailed habit statistics."""
+    """Display detailed information about a specific habit."""
     habit = Habit.query.get_or_404(habit_id)
     today = datetime.utcnow().date()
     start_date = habit.created_at.date()
-
-    # Calculate display period
     end_date = min(today, start_date + timedelta(days=habit.target_days - 1))
     total_days = (end_date - start_date).days + 1
 
-    # Get progress data
     progress_data = Progress.query.filter(
         Progress.habit_id == habit_id,
         Progress.date >= start_date,
         Progress.date <= end_date
     ).order_by(Progress.date).all()
 
-    # Prepare chart data
     chart_labels = []
     chart_data = []
-
     for day_offset in range(total_days):
         current_date = start_date + timedelta(days=day_offset)
         chart_labels.append(current_date.strftime('%Y-%m-%d'))
         progress = next((p for p in progress_data if p.date == current_date), None)
         chart_data.append(1 if progress and progress.completed else 0)
 
-    # Calculate statistics
     current_day = (today - start_date).days + 1
     completion_rate = round(
         (len([p for p in progress_data if p.completed]) / total_days * 100)
@@ -108,16 +105,23 @@ def delete_habit(habit_id):
     habit = Habit.query.get_or_404(habit_id)
     if habit.user_id != current_user.id:
         abort(403)
-    db.session.delete(habit)
-    db.session.commit()
-    flash('Habit deleted', 'success')
+
+    try:
+        db.session.delete(habit)
+        db.session.commit()
+        flash('Привычка успешно удалена', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash('Ошибка при удалении привычки', 'danger')
+        app.logger.error(f"Error deleting habit: {str(e)}")
+
     return redirect(url_for('habits.dashboard'))
 
 
 @habits_bp.route('/<int:habit_id>/mark/<completed>', methods=['POST'])
 @login_required
 def mark_habit(habit_id, completed):
-    """Mark habit as completed/skipped."""
+    """Mark a habit as completed or skipped."""
     habit = Habit.query.get_or_404(habit_id)
     if habit.user_id != current_user.id:
         abort(403)
@@ -148,19 +152,14 @@ def mark_habit(habit_id, completed):
 @habits_bp.route('/api/progress', methods=['POST'])
 @login_required
 def update_progress():
-    """API endpoint for progress updates."""
+    """Update habit progress via API."""
     data = request.get_json()
     habit = Habit.query.get_or_404(data['habit_id'])
 
     if habit.user_id != current_user.id:
-        return jsonify({
-            'success': False,
-            'error': 'Permission denied'
-        }), 403
+        return jsonify({'success': False, 'error': 'Permission denied'}), 403
 
     date = datetime.strptime(data['date'], '%Y-%m-%d').date()
-
-    # Validate date range
     start_date = habit.created_at.date()
     end_date = start_date + timedelta(days=habit.target_days - 1)
 

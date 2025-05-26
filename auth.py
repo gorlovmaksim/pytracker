@@ -7,15 +7,14 @@ from models import User
 from forms import LoginForm, RegistrationForm
 from db import db
 
-
-auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
+auth_bp = Blueprint('auth', __name__)
 
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
     """Handle user registration.
 
-    Processes registration form and creates new user accounts.
+    Processes registration form and creates a new user account.
     """
     form = RegistrationForm()
     if form.validate_on_submit():
@@ -29,7 +28,7 @@ def register():
             db.session.commit()
             flash('Registration successful! Please log in.', 'success')
             return redirect(url_for('auth.login'))
-        except Exception as e:
+        except Exception:
             db.session.rollback()
             flash('Registration failed. Please try again.', 'danger')
 

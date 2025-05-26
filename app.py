@@ -1,4 +1,4 @@
-"""Main application factory for PyTracker."""
+"""Main application factory and entry point."""
 
 from flask import Flask
 from flask_login import LoginManager
@@ -9,11 +9,7 @@ from models import User
 
 
 def create_app():
-    """Create and configure the Flask application.
-
-    Returns:
-        Flask: The configured Flask application instance
-    """
+    """Create and configure the Flask application."""
     app = Flask(__name__)
     app.config.from_object(Config)
 
@@ -26,28 +22,21 @@ def create_app():
 
     @login_manager.user_loader
     def load_user(user_id):
-        """Load user by ID for Flask-Login.
-
-        Args:
-            user_id: ID of the user to load
-
-        Returns:
-            User: User instance or None if not found
-        """
-        return User.query.get(int(user_id))
+        """Load user by ID for Flask-Login."""
+        return db.session.get(User, int(user_id))
 
     # Register blueprints
     from auth import auth_bp
     from habits import habits_bp
-
     app.register_blueprint(auth_bp)
     app.register_blueprint(habits_bp)
 
     return app
 
 
+app = create_app()
+
 if __name__ == '__main__':
-    app = create_app()
     with app.app_context():
         db.create_all()
     app.run(debug=True)

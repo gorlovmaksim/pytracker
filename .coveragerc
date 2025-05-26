@@ -1,0 +1,10 @@
+[run]
+source =
+    app.py
+    auth.py
+    habits.py
+    models.py
+    db.py
+omit =
+    */tests/*
+    */__init__.py
