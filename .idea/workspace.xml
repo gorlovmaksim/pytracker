@@ -4,25 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b13242a7-bf7f-4f38-9602-c3dbac967ae8" name="Changes" comment="Добавление полного проекта">
-      <change beforePath="$PROJECT_DIR$/ .gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/forms.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/habits.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/style.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/add_habit.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/dashboard.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/habit_detail.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/login.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/register.html" beforeDir="false" />
-    </list>
+    <list default="true" id="b13242a7-bf7f-4f38-9602-c3dbac967ae8" name="Changes" comment="Добавление полного проекта" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
