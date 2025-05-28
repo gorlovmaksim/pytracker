@@ -1,4 +1,6 @@
-"""Form definitions for user authentication and habit tracking."""
+"""
+Form definitions using WTForms for user and habit management.
+"""
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SelectField, IntegerField
@@ -6,53 +8,32 @@ from wtforms.validators import DataRequired, Email, Length, EqualTo
 
 
 class RegistrationForm(FlaskForm):
-    """User registration form."""
+    """Form for registering a new user."""
 
     username = StringField(
-        'Username',
-        validators=[DataRequired(), Length(min=4, max=20)]
+        "Username", validators=[DataRequired(), Length(min=4, max=20)]
     )
-    email = StringField(
-        'Email',
-        validators=[DataRequired(), Email()]
-    )
-    password = PasswordField(
-        'Password',
-        validators=[DataRequired(), Length(min=6)]
-    )
+    email = StringField("Email", validators=[DataRequired(), Email()])
+    password = PasswordField("Password", validators=[DataRequired(), Length(min=6)])
     confirm_password = PasswordField(
-        'Confirm Password',
-        validators=[DataRequired(), EqualTo('password')]
+        "Confirm Password", validators=[DataRequired(), EqualTo("password")]
     )
 
 
 class LoginForm(FlaskForm):
-    """User login form."""
+    """Form for logging in a user."""
 
-    email = StringField(
-        'Email',
-        validators=[DataRequired(), Email()]
-    )
-    password = PasswordField(
-        'Password',
-        validators=[DataRequired()]
-    )
+    email = StringField("Email", validators=[DataRequired(), Email()])
+    password = PasswordField("Password", validators=[DataRequired()])
 
 
 class HabitForm(FlaskForm):
     """Form for creating or editing a habit."""
 
-    name = StringField(
-        'Habit Name',
-        validators=[DataRequired()]
-    )
+    name = StringField("Habit Name", validators=[DataRequired()])
     periodicity = SelectField(
-        'Periodicity',
-        choices=[('daily', 'Daily'), ('weekly', 'Weekly')],
-        validators=[DataRequired()]
+        "Periodicity",
+        choices=[("daily", "Daily"), ("weekly", "Weekly")],
+        validators=[DataRequired()],
     )
-    target_days = IntegerField(
-        'Target Days',
-        default=21,
-        validators=[DataRequired()]
-    )
+    target_days = IntegerField("Target Days", default=21, validators=[DataRequired()])

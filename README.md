@@ -28,5 +28,5 @@
 
 1. Клонируйте репозиторий:
    ```bash
-   git clone https://github.com/ваш-username/pytracker.git
+   git clone https://github.com/gorlovmaksim/pytracker
    cd pytracker

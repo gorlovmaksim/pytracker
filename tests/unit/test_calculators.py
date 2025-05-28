@@ -1,13 +1,20 @@
-"""Unit tests for streak calculators."""
+"""
+Unit tests for streak calculators.
+"""
+
 
 def test_daily_streak_calculator(app):
-    """Test daily streak calculation."""
+    """Test daily streak calculation.
+
+    Args:
+        app (Flask): The Flask application instance.
+    """
     with app.app_context():
         from models import DailyStreakCalculator, Progress
         from datetime import date, timedelta
 
         entries = [
             Progress(date=date.today(), completed=True),
-            Progress(date=date.today() - timedelta(days=1), completed=True)
+            Progress(date=date.today() - timedelta(days=1), completed=True),
         ]
         assert DailyStreakCalculator().calculate(entries) == 2

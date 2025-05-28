@@ -1,28 +1,32 @@
+# IDE files
 .idea/
 *.iml
 
+# Python cache
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
 
+# Virtual environments
 venv/
 env/
 .venv/
 
+# Databases
 *.db
 *.sqlite
 instance/
 
+# Test / coverage
 .tox/
 .coverage
 htmlcov/
 .pytest_cache/
 
+# Environment variables
 .env
 .env.local
 
-.DS_Store
-Thumbs.db
-
-[envtmpdir]/
+# Misc
+config.py

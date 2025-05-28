@@ -1,4 +1,6 @@
-"""Custom decorators for application functionality."""
+"""
+Custom decorators for application functionality.
+"""
 
 from functools import wraps
 
@@ -12,8 +14,10 @@ def log_activity(func):
     Returns:
         function: The wrapped function with logging.
     """
+
     @wraps(func)
     def wrapper(*args, **kwargs):
         print(f"Activity: {func.__name__} executed")
         return func(*args, **kwargs)
+
     return wrapper

@@ -1,10 +1,17 @@
-"""Unit tests for custom decorators."""
+"""
+Unit tests for custom decorators.
+"""
 
 from decorators import log_activity
 
 
 def test_log_activity(capsys):
-    """Test the log_activity decorator."""
+    """Test the log_activity decorator.
+
+    Args:
+        capsys (pytest.CaptureFixture): Pytest fixture to capture stdout/stderr.
+    """
+
     @log_activity
     def test_func():
         return "test"
